@@ -9,9 +9,23 @@ use Google\Protobuf\Internal\Message;
 use Keboola\StorageDriver\Command\Common\DriverResponse;
 use Keboola\StorageDriver\Contract\Driver\ClientInterface;
 use Keboola\StorageDriver\Snowflake\Handler\HandlerFactory;
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
 
 final class SnowflakeDriverClient implements ClientInterface
 {
+    protected LoggerInterface $internalLogger;
+
+    public function __construct(
+        LoggerInterface|null $internalLogger = null,
+    ) {
+        if ($internalLogger === null) {
+            $this->internalLogger = new NullLogger();
+        } else {
+            $this->internalLogger = $internalLogger;
+        }
+    }
+
     /**
      * @param string[] $features
      */
